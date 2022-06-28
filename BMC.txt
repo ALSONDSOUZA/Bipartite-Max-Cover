@@ -1,0 +1,61 @@
+//BIPARTITE MAX COVER PROGRAM
+
+#include<iostream>
+using namespace std;
+const int M=6;//M-->NO.OF VERTICES IN SET A.
+const int N=6;//N-->NO.OF VERTICES IN SET B.
+
+bool Check(int adj[][N],int m[],bool c[], int u);
+
+int bpmaxcov(int adj[][N])
+{
+    int match[N],result=0;
+    bool check[N]; //ARRAY THAT TELLS WETHER VERTICES OF SET B HAVE BEEN CHECKED FOR RESPECTIVE A VERTICES.
+
+    for(int i=0;i<N;i++)
+    {
+      match[i]=-1;
+      check[i]=false;
+    }
+
+    for(int i=0;i<M;i++) //TO FIND MATCH FOR EVERY VERTICE IN SET A
+    {
+      if(Check(adj,match,check,i))
+        result++;
+    }
+
+    return result;
+}
+
+
+bool Check(int adj[][N],int m[],bool c[], int u)
+{
+  for(int i=0;i<N;i++)
+  {
+    if(adj[u][i] && !c[i])
+    {
+      c[i]=true;
+      if(m[i]<0 || Check(adj,m,c,m[i])) //RECURSIVELY CALLS CHECK FUNCTION TO BACKTRACK AND FIND OTHER COMBINATION
+      {
+        m[i]=u;
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+
+int main()
+{
+    int adj[M][N];
+    cout<<"Enter the adjacency matrix\n";
+    for(int i=0;i<M;i++)
+    {
+        for(int j=0;j<N;j++)
+            cin>>adj[i][j];
+    }
+
+    cout<<bpmaxcov(adj);
+    return 0;
+}
